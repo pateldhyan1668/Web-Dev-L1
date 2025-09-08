@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Clean Light Calculator</title>
+    <link rel="stylesheet" href="calculator.css">
+    <script src="calculator.js" defer></script>
+</head>
+<body>
+    <header class="calc-title">NEO Calculator</header>
+    <main class="calculator" role="application" aria-label="Calculator">
+        <!-- Display -->
+        <section class="display" aria-live="polite" aria-atomic="true">
+            <div class="history" id="history" title="Previous expression"></div>
+            <div class="current" id="current" title="Current input">0</div>
+            <div class="result" id="result" title="Live result"></div>
+        </section>
+
+        <!-- Keys -->
+        <section class="keys" id="keys">
+            <!-- Row 1 -->
+            <button class="key util" data-action="ac" aria-label="All Clear (AC)">AC</button>
+            <button class="key util" data-action="c" aria-label="Clear last (C)">C</button>
+            <button class="key operator" data-value="%" aria-label="Percent">%</button>
+            <button class="key operator" data-value="÷" aria-label="Divide">÷</button>
+
+            <!-- Row 2 -->
+            <button class="key number" data-value="7">7</button>
+            <button class="key number" data-value="8">8</button>
+            <button class="key number" data-value="9">9</button>
+            <button class="key operator" data-value="×" aria-label="Multiply">×</button>
+
+            <!-- Row 3 -->
+            <button class="key number" data-value="4">4</button>
+            <button class="key number" data-value="5">5</button>
+            <button class="key number" data-value="6">6</button>
+            <button class="key operator" data-value="-" aria-label="Subtract">−</button>
+
+            <!-- Row 4 -->
+            <button class="key number" data-value="1">1</button>
+            <button class="key number" data-value="2">2</button>
+            <button class="key number" data-value="3">3</button>
+            <button class="key operator" data-value="+" aria-label="Add">+</button>
+
+            <!-- Row 5 -->
+            <button class="key number span-2" data-value="0">0</button>
+            <button class="key number" data-value="." aria-label="Decimal">.</button>
+            <button class="key equals" data-action="equals" aria-label="Equals">=</button>
+        </section>
+    </main>
+
+    <div class="note">Tip: Use your keyboard — numbers, + − × * ÷ / . Backspace, Delete, Enter, C, or Esc.</div>
+</body>
+</html>
