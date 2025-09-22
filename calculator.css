@@ -1,183 +1,185 @@
-/* =========================
-       Light Theme & Base Styles
-       ========================= */
-    :root {
-        --bg: #f7f8fb;
-        --card: #ffffff;
-        --text: #1f2937;
-        --muted: #6b7280;
-        --border: #e5e7eb;
-        /* Pastel accents */
-        --accent: #88b3ff;          /* pastel blue */
-        --accent-strong: #5a91ff;
-        --accent-operator: #ffd68a; /* pastel amber */
-        --accent-operator-strong: #ffc755;
-        --danger: #ff9aa2;          /* soft red/pink */
-        --danger-strong: #ff7a84;
-        --radius: 18px;
-        --shadow-sm: 0 2px 10px rgba(16, 24, 40, 0.06);
-        --shadow-md: 0 10px 30px rgba(16, 24, 40, 0.08);
-        --focus: 0 0 0 3px rgba(88, 140, 255, 0.25);
-    }
-    * {
-        box-sizing: border-box;
-    }
-    html, body {
-        height: 100%;
-    }
-    body {
-        margin: 0;
-        font-family: ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI",
-                     Roboto, Oxygen, Ubuntu, "Helvetica Neue", Arial, "Apple Color Emoji",
-                     "Segoe UI Emoji", "Segoe UI Symbol";
-        background: radial-gradient(1200px 800px at 20% -10%, #f2f6ff 0%, var(--bg) 45%, var(--bg) 100%);
-        color: var(--text);
-        display: grid;
-        place-items: center;
-        padding: 20px;
-    }
+:root {
+    --bg: #f7f8fb;
+    --card: #ffffff;
+    --text: #1f2937;
+    --muted: #6b7280;
+    --border: #e5e7eb;
+    --accent: #88b3ff;
+    --accent-strong: #5a91ff;
+    --accent-operator: #ffd68a;
+    --accent-operator-strong: #ffc755;
+    --danger: #ff9aa2;
+    --danger-strong: #ff7a84;
+    --radius: 18px;
+    --shadow-sm: 0 2px 10px rgba(16, 24, 40, 0.06);
+    --shadow-md: 0 10px 30px rgba(16, 24, 40, 0.08);
+    --focus: 0 0 0 3px rgba(88, 140, 255, 0.25);
+}
 
-    .calc-title {
+* {
+    box-sizing: border-box;
+}
+
+html,
+body {
+    height: 100%;
+}
+
+body {
+    margin: 0;
+    font-family: ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI",
+        Roboto, Oxygen, Ubuntu, "Helvetica Neue", Arial, "Apple Color Emoji",
+        "Segoe UI Emoji", "Segoe UI Symbol";
+    background: radial-gradient(1200px 800px at 20% -10%, #f2f6ff 0%, var(--bg) 45%, var(--bg) 100%);
+    color: var(--text);
+    display: grid;
+    place-items: center;
+    padding: 20px;
+}
+
+.calc-title {
     text-align: center;
     font-size: 2rem;
     font-weight: 700;
     padding: 14px 0;
     color: var(--text);
     letter-spacing: 0.5px;
-    }
+}
 
-    /* =========================
-       Calculator Shell
-       ========================= */
-    .calculator {
-        width: 340px;
-        background: var(--card);
-        border: 1px solid var(--border);
-        border-radius: var(--radius);
-        box-shadow: var(--shadow-md);
-        display: grid;
-        grid-template-rows: auto 1fr;
-        overflow: hidden;
-        transition: transform 160ms ease;
-    }
-    .calculator:active {
-        transform: translateY(1px);
-    }
-    /* =========================
-       Display Area
-       ========================= */
-    .display {
-        padding: 18px 20px 10px 20px;
-        background: linear-gradient(180deg, #ffffff 0%, #fbfbfe 100%);
-        border-bottom: 1px solid var(--border);
-    }
-    .display .history {
-        min-height: 22px;
-        font-size: 0.88rem;
-        color: var(--muted);
-        letter-spacing: 0.25px;
-        overflow: hidden;
-        text-overflow: ellipsis;
-        white-space: nowrap;
-    }
-    .display .current {
-        margin-top: 6px;
-        font-weight: 700;
-        font-variant-numeric: tabular-nums;
-        letter-spacing: 0.6px;
-        font-size: clamp(1.6rem, 2.2vw + 1rem, 2.4rem);
-        line-height: 1.2;
-        text-align: right;
-        word-break: break-all;
-    }
-    .display .result {
-        margin-top: 8px;
-        font-size: 1rem;
-        color: var(--muted);
-        text-align: right;
-        min-height: 22px;
-    }
-    /* =========================
-       Button Grid
-       ========================= */
-    .keys {
-        display: grid;
-        grid-template-columns: repeat(4, 1fr);
-        gap: 10px;
-        padding: 14px;
-        background: linear-gradient(180deg, #fcfdff 0%, #f9fbff 100%);
-    }
-    button.key {
-        position: relative;
-        height: 64px;
-        border: 1px solid var(--border);
-        border-radius: 14px;
-        background: #ffffff;
-        color: var(--text);
-        font-size: 1.1rem;
-        font-weight: 600;
-        letter-spacing: 0.25px;
-        cursor: pointer;
-        box-shadow: var(--shadow-sm);
-        transition: transform 80ms ease, box-shadow 160ms ease, background-color 160ms ease, border-color 160ms ease;
-        outline: none;
-    }
-    /* Number keys */
-    button.key.number:hover {
-        background: #f6f9ff;
-        border-color: #dbe3ff;
-    }
-    button.key.number:active {
-        transform: translateY(1px);
-        box-shadow: 0 4px 16px rgba(16, 24, 40, 0.08) inset;
-    }
-    /* Operator keys */
-    button.key.operator {
-        background: linear-gradient(180deg, #fff9ee 0%, #fffdfa 100%);
-        border-color: #ffe7b2;
-    }
-    button.key.operator:hover {
-        background: linear-gradient(180deg, #fff4dc 0%, #fff8ec 100%);
-        border-color: var(--accent-operator-strong);
-    }
-    /* Utility keys (AC/C) */
-    button.key.util {
-        background: linear-gradient(180deg, #fff5f6 0%, #fff9fa 100%);
-        border-color: #ffd1d6;
-        color: #9b1c26;
-    }
-    button.key.util:hover {
-        background: linear-gradient(180deg, #ffecef 0%, #fff4f6 100%);
-        border-color: var(--danger-strong);
-    }
-    /* Equals key */
-    button.key.equals {
-        background: linear-gradient(180deg, #eaf1ff 0%, #f3f7ff 100%);
-        border-color: #cfe0ff;
-        color: #1b4bd6;
-    }
-    button.key.equals:hover {
-        background: linear-gradient(180deg, #dfe8ff 0%, #ecf2ff 100%);
-        border-color: var(--accent-strong);
-    }
-    /* Spans */
-    .span-2 {
-        grid-column: span 2;
-    }
-    /* Focus style for accessibility */
-    button.key:focus-visible {
-        box-shadow: var(--focus);
-        border-color: transparent;
-    }
-    /* Small helper: “pressed” feedback via JS */
-    .pressed {
-        transform: translateY(1px) scale(0.995);
-        box-shadow: 0 4px 16px rgba(16, 24, 40, 0.08) inset !important;
-    }
-    /* Footer note (optional) */
-    .note {
-        margin-top: 14px;
-        font-size: 0.8rem;
-        color: var(--muted);
-        text-align: center;
-    }
+.calculator {
+    width: 340px;
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    box-shadow: var(--shadow-md);
+    display: grid;
+    grid-template-rows: auto 1fr;
+    overflow: hidden;
+    transition: transform 160ms ease;
+}
+
+.calculator:active {
+    transform: translateY(1px);
+}
+
+.display {
+    padding: 18px 20px 10px 20px;
+    background: linear-gradient(180deg, #ffffff 0%, #fbfbfe 100%);
+    border-bottom: 1px solid var(--border);
+}
+
+.display .history {
+    min-height: 22px;
+    font-size: 0.88rem;
+    color: var(--muted);
+    letter-spacing: 0.25px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.display .current {
+    margin-top: 6px;
+    font-weight: 700;
+    font-variant-numeric: tabular-nums;
+    letter-spacing: 0.6px;
+    font-size: clamp(1.6rem, 2.2vw + 1rem, 2.4rem);
+    line-height: 1.2;
+    text-align: right;
+    word-break: break-all;
+}
+
+.display .result {
+    margin-top: 8px;
+    font-size: 1rem;
+    color: var(--muted);
+    text-align: right;
+    min-height: 22px;
+}
+
+.keys {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 10px;
+    padding: 14px;
+    background: linear-gradient(180deg, #fcfdff 0%, #f9fbff 100%);
+}
+
+button.key {
+    position: relative;
+    height: 64px;
+    border: 1px solid var(--border);
+    border-radius: 14px;
+    background: #ffffff;
+    color: var(--text);
+    font-size: 1.1rem;
+    font-weight: 600;
+    letter-spacing: 0.25px;
+    cursor: pointer;
+    box-shadow: var(--shadow-sm);
+    transition: transform 80ms ease, box-shadow 160ms ease, background-color 160ms ease, border-color 160ms ease;
+    outline: none;
+}
+
+button.key.number:hover {
+    background: #f6f9ff;
+    border-color: #dbe3ff;
+}
+
+button.key.number:active {
+    transform: translateY(1px);
+    box-shadow: 0 4px 16px rgba(16, 24, 40, 0.08) inset;
+}
+
+button.key.operator {
+    background: linear-gradient(180deg, #fff9ee 0%, #fffdfa 100%);
+    border-color: #ffe7b2;
+}
+
+button.key.operator:hover {
+    background: linear-gradient(180deg, #fff4dc 0%, #fff8ec 100%);
+    border-color: var(--accent-operator-strong);
+}
+
+button.key.util {
+    background: linear-gradient(180deg, #fff5f6 0%, #fff9fa 100%);
+    border-color: #ffd1d6;
+    color: #9b1c26;
+}
+
+button.key.util:hover {
+    background: linear-gradient(180deg, #ffecef 0%, #fff4f6 100%);
+    border-color: var(--danger-strong);
+}
+
+button.key.equals {
+    background: linear-gradient(180deg, #eaf1ff 0%, #f3f7ff 100%);
+    border-color: #cfe0ff;
+    color: #1b4bd6;
+}
+
+button.key.equals:hover {
+    background: linear-gradient(180deg, #dfe8ff 0%, #ecf2ff 100%);
+    border-color: var(--accent-strong);
+}
+
+.span-2 {
+    grid-column: span 2;
+}
+
+button.key:focus-visible {
+    box-shadow: var(--focus);
+    border-color: transparent;
+}
+
+.pressed {
+    transform: translateY(1px) scale(0.995);
+    box-shadow: 0 4px 16px rgba(16, 24, 40, 0.08) inset !important;
+}
+
+.note {
+    margin-top: 14px;
+    font-size: 0.8rem;
+    color: var(--muted);
+    text-align: center;
+}

@@ -1,57 +1,30 @@
-// ==========================================================
-// Clean, Modular Vanilla JS Calculator (external file)
-// - Supports mouse & keyboard
-// - Handles decimals, AC, C, %, and basic operators
-// - Gentle input sanitation to avoid invalid eval
-// ==========================================================
-
 "use strict";
 
 document.addEventListener("DOMContentLoaded", () => {
-    // -----------------------------
-    // DOM references
-    // -----------------------------
+    // Elements
     const elHistory = document.getElementById("history");
     const elCurrent = document.getElementById("current");
     const elResult  = document.getElementById("result");
     const elKeys    = document.getElementById("keys");
 
-    // -----------------------------
     // State
-    // -----------------------------
-    let input = "0";          // what user is typing
-    let lastResult = "";      // last computed result for history
+    let input = "0";
+    let lastResult = "";
 
-    // Allowed operator characters we display
     const DISPLAY_OPS = ["+", "-", "×", "÷", "%"];
 
-    // -----------------------------
-    // Utilities
-    // -----------------------------
-
-    /**
-     * Is the last character of the current input an operator?
-     */
+    // Helpers
     function endsWithOperator(str) {
         if (!str) return false;
-        const last = str.slice(-1);
-        return DISPLAY_OPS.includes(last);
+        return DISPLAY_OPS.includes(str.slice(-1));
     }
 
-    /**
-     * Can we add a decimal dot here? Prevent multiple decimals in one number chunk.
-     */
     function canInsertDecimal(str) {
-        // Find last operator position and examine substring after it
         const lastOpIndex = findLastOperatorIndex(str);
         const chunk = str.slice(lastOpIndex + 1);
         return !chunk.includes(".");
     }
 
-    /**
-     * Find index of last display operator (+, -, ×, ÷, %) in the string.
-     * Returns -1 if none.
-     */
     function findLastOperatorIndex(str) {
         let lastIndex = -1;
         for (const op of DISPLAY_OPS) {
@@ -61,61 +34,32 @@ document.addEventListener("DOMContentLoaded", () => {
         return lastIndex;
     }
 
-    /**
-     * Convert display expression to a JS-evaluable string.
-     * Also handles percent (%) as /100 for the immediate number token.
-     */
     function toEvaluable(expr) {
-        // Replace × and ÷
         let s = expr.replace(/×/g, "*").replace(/÷/g, "/");
-
-        // Handle percent:
-        // Convert tokens like "50%" to "(50/100)"
-        // Also handle cases like "200+10%" => "200+(10/100)"
-        // For a simplified approach, replace "<number>%" with "(<number>/100)"
         s = s.replace(/(\d+(\.\d+)?)%/g, "($1/100)");
-
         return s;
     }
 
-    /**
-     * Evaluate the expression safely-ish.
-     * - Avoid trailing operators.
-     * - Use Function constructor (local only).
-     */
     function evaluateExpression(expr) {
         if (!expr) return "";
-        // Remove trailing operator if present
         let trimmed = expr;
-        while (endsWithOperator(trimmed)) {
-            trimmed = trimmed.slice(0, -1);
-        }
+        while (endsWithOperator(trimmed)) trimmed = trimmed.slice(0, -1);
         if (!trimmed) return "";
 
         const evaluable = toEvaluable(trimmed);
-
-        // Disallow any characters other than digits, operators, dot, parentheses, and spaces
-        if (!/^[0-9+\-*/().\s%]*$/.test(evaluable)) {
-            return "Error";
-        }
+        if (!/^[0-9+\-*/().\s%]*$/.test(evaluable)) return "Error";
 
         try {
-            // eslint-disable-next-line no-new-func
             const val = Function(`"use strict"; return (${evaluable});`)();
-            // Handle division by zero or non-finite results
             if (!isFinite(val)) return "Error";
-            return +val.toFixed(12); // normalize to avoid floating errors in display
+            return +val.toFixed(12);
         } catch {
             return "Error";
         }
     }
 
-    /**
-     * Update Display areas (current & live result).
-     */
     function render() {
         elCurrent.textContent = input || "0";
-
         const live = evaluateExpression(input);
         if (live === "" || live === "Error" || String(live) === input) {
             elResult.textContent = "";
@@ -124,29 +68,19 @@ document.addEventListener("DOMContentLoaded", () => {
         }
     }
 
-    /**
-     * Add a value to the input (numbers/operators/decimal).
-     */
     function appendValue(val) {
-        // If starting from "0", replace unless decimal
         if (input === "0" && /^[0-9]$/.test(val)) {
             input = val;
             return;
         }
         if (val === ".") {
             if (!canInsertDecimal(input)) return;
-            // If last char is operator or input empty, prepend a leading zero
-            if (!input || endsWithOperator(input)) {
-                input += "0";
-            }
+            if (!input || endsWithOperator(input)) input += "0";
             input += ".";
             return;
         }
-
-        // Operators
         if (DISPLAY_OPS.includes(val)) {
-            if (!input) return; // no leading operator
-            // Replace last operator if user presses two operators in a row
+            if (!input) return;
             if (endsWithOperator(input)) {
                 input = input.slice(0, -1) + val;
             } else {
@@ -154,17 +88,12 @@ document.addEventListener("DOMContentLoaded", () => {
             }
             return;
         }
-
-        // Numbers
         if (/^\d$/.test(val)) {
             input += val;
             return;
         }
     }
 
-    /**
-     * Handle AC (all clear) and C (backspace).
-     */
     function handleClear(type) {
         if (type === "ac") {
             input = "0";
@@ -180,9 +109,6 @@ document.addEventListener("DOMContentLoaded", () => {
         }
     }
 
-    /**
-     * Commit evaluation with "=".
-     */
     function handleEquals() {
         const val = evaluateExpression(input);
         if (val === "Error" || val === "") {
@@ -195,9 +121,6 @@ document.addEventListener("DOMContentLoaded", () => {
         elResult.textContent = "";
     }
 
-    /**
-     * Tiny visual error feedback on the display area.
-     */
     function flashError() {
         const original = elCurrent.style.color;
         elCurrent.style.color = "#c1121f";
@@ -206,22 +129,16 @@ document.addEventListener("DOMContentLoaded", () => {
         }, 180);
     }
 
-    /**
-     * Brief press animation for keys (mouse & keyboard).
-     */
     function pressEffect(button) {
         if (!button) return;
         button.classList.add("pressed");
         setTimeout(() => button.classList.remove("pressed"), 120);
     }
 
-    // -----------------------------
-    // Mouse / Touch Input
-    // -----------------------------
+    // Mouse input
     elKeys.addEventListener("click", (e) => {
         const btn = e.target.closest("button.key");
         if (!btn) return;
-
         const action = btn.getAttribute("data-action");
         const value = btn.getAttribute("data-value");
 
@@ -232,15 +149,12 @@ document.addEventListener("DOMContentLoaded", () => {
             render();
             return;
         }
-
         if (action === "equals") {
             handleEquals();
             render();
             return;
         }
-
         if (value != null) {
-            // Normalize operator symbols to our display set
             let v = value;
             if (v === "*") v = "×";
             if (v === "/") v = "÷";
@@ -249,34 +163,19 @@ document.addEventListener("DOMContentLoaded", () => {
         }
     });
 
-    // -----------------------------
-    // Keyboard Input
-    // -----------------------------
+    // Keyboard input
     window.addEventListener("keydown", (e) => {
         const key = e.key;
+        const keyToDisplay = { "*": "×", "/": "÷", "+": "+", "-": "-", "%": "%" };
 
-        // Map keyboard to display ops and actions
-        const keyToDisplay = {
-            "*": "×",
-            "/": "÷",
-            "+": "+",
-            "-": "-",
-            "%": "%",
-        };
-
-        // Equals / Enter
         if (key === "Enter" || key === "=") {
             e.preventDefault();
             handleEquals();
             render();
-            const equalsBtn = document.querySelector('[data-action="equals"]');
-            pressEffect(equalsBtn);
+            pressEffect(document.querySelector('[data-action="equals"]'));
             return;
         }
-
-        // AC / C
         if (key.toLowerCase() === "c") {
-            // Single 'c' acts as backspace; Esc/Delete do AC
             handleClear("c");
             render();
             pressEffect(document.querySelector('[data-action="c"]'));
@@ -294,24 +193,18 @@ document.addEventListener("DOMContentLoaded", () => {
             pressEffect(document.querySelector('[data-action="c"]'));
             return;
         }
-
-        // Numbers
         if (/^\d$/.test(key)) {
             appendValue(key);
             render();
             pressEffect(document.querySelector(`.key.number[data-value="${key}"]`));
             return;
         }
-
-        // Decimal
         if (key === ".") {
             appendValue(".");
             render();
             pressEffect(document.querySelector(`.key.number[data-value="."]`));
             return;
         }
-
-        // Operators
         if (key in keyToDisplay) {
             appendValue(keyToDisplay[key]);
             render();
@@ -325,6 +218,5 @@ document.addEventListener("DOMContentLoaded", () => {
         }
     });
 
-    // Initial paint
     render();
 });
